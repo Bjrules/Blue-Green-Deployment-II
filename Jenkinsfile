@@ -11,7 +11,7 @@ pipeline {
     }
     
     environment {
-        IMAGE_NAME = "adijaiswal/bankapp"
+        IMAGE_NAME = "bjrules/bankapp"
         TAG = "${params.DOCKER_TAG}"  // The image tag now comes from the parameter
         KUBE_NAMESPACE = 'webapps'
         SCANNER_HOME = tool 'sonar-scanner'
@@ -64,11 +64,6 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                sh "mvn package -Dskiptests=true"
-            }
-        }
         
          stage('Publish To Nexus') {
             steps {
@@ -77,10 +72,10 @@ pipeline {
                     }
             }
         }
-        stage('Docker build') {
+        stage('Docker build & Tag Image') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker-cred') {
+                    withDockerRegistry(credentialsId: 'Dockerhub-cred') {
                         sh "docker build -t ${IMAGE_NAME}:${TAG} ."
                     }
                 }
@@ -96,7 +91,7 @@ pipeline {
         stage('Docker Push Image') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker-cred') {
+                    withDockerRegistry(credentialsId: 'Dockerhub-cred') {
                         sh "docker push ${IMAGE_NAME}:${TAG}"
                     }
                 }
@@ -106,7 +101,7 @@ pipeline {
         stage('Deploy MySQL Deployment and Service') {
             steps {
                 script {
-                    withKubeConfig(caCertificate: '', clusterName: 'devopsshack-cluster', contextName: '', credentialsId: 'k8-token', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://46743932FDE6B34C74566F392E30CABA.gr7.ap-south-1.eks.amazonaws.com') {
+                    withKubeConfig(caCertificate: '', clusterName: 'bnj-cluster', contextName: '', credentialsId: 'K8s-token', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://46743932FDE6B34C74566F392E30CABA.gr7.ap-south-1.eks.amazonaws.com') {
                         sh "kubectl apply -f mysql-ds.yml -n ${KUBE_NAMESPACE}"  // Ensure you have the MySQL deployment YAML ready
                     }
                 }
