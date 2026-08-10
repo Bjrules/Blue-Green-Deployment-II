@@ -39,19 +39,44 @@ pipeline {
 
         stage('Trivy FS Scan') {
             steps {
-                sh "trivy fs --format table -o fs.html ."
+                sh "trivy fs --format table -o filescan.html ."
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonar') {
-                    sh "$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=nodejsmysql -Dsonar.projectName=nodejsmysql"
+                withSonarQubeEnv('sonar-server') {
+                    sh "$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=GCBANK -Dsonar.projectName=GCBANK -Dsonar.java.binaries=target"
                 }
             }
         }
+        stage('Quality gates Check'){
+            steps {
+              timeout(time: 1, unit: 'HOURS') {
+                waitForQualityGate abortPipeline: false
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh "mvn package -Dskiptests=true"
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh "mvn package -Dskiptests=true"
+            }
+        }
         
-        
+         stage('Publish To Nexus') {
+            steps {
+                withMaven(globalMavenSettingsConfig: 'Banjo-Nexus-config', maven: 'maven3', traceability: true) {
+                        sh 'mvn Deploy -Dskiptests=true'
+                    }
+            }
+        }
         stage('Docker build') {
             steps {
                 script {
