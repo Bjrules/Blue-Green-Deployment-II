@@ -22,10 +22,21 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/jaiswaladi246/3-Tier-NodeJS-MySql-Docker.git'
+                git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/Bjrules/Blue-Green-Deployment-II.git'
             }
         }
-        
+        stage('Compile'){
+            steps {
+                sh "mvn compile"
+            }
+        }
+
+        stage('Testing'){
+            steps {
+                sh "mvn test Dskiptest=true"
+            }
+        }
+
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonar') {
