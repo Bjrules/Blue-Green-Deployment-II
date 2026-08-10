@@ -8,6 +8,7 @@ pipeline {
     }
     tools {
         maven 'maven3'
+        jdk 'jdk17'
     }
     
     environment {
@@ -67,7 +68,7 @@ pipeline {
         
          stage('Publish To Nexus') {
             steps {
-                withMaven(globalMavenSettingsConfig: 'Banjo-Nexus-Config', maven: 'maven3', traceability: true) {
+                withMaven(globalMavenSettingsConfig: 'Banjo-Nexus-Config', jdk: 'jdk17' maven: 'maven3', traceability: true) {
                         sh "mvn deploy -DskipTests=true"
                     }
             }
