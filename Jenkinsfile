@@ -33,7 +33,7 @@ pipeline {
 
         stage('Testing'){
             steps {
-                sh "mvn test -Dskiptests=true"
+                sh "mvn test -DskipTests=true"
             }
         }
 
@@ -60,7 +60,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh "mvn package -Dskiptests=true"
+                sh "mvn package -DskipTests=true"
             }
         }
 
@@ -68,7 +68,7 @@ pipeline {
          stage('Publish To Nexus') {
             steps {
                 withMaven(globalMavenSettingsConfig: 'Banjo-Nexus-config', maven: 'maven3', traceability: true) {
-                        sh 'mvn Deploy -Dskiptests=true'
+                        sh 'mvn Deploy -DskipTests=true'
                     }
             }
         }
