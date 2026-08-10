@@ -33,7 +33,13 @@ pipeline {
 
         stage('Testing'){
             steps {
-                sh "mvn test Dskiptest=true"
+                sh "mvn test -Dskiptests=true"
+            }
+        }
+
+        stage('Trivy FS Scan') {
+            steps {
+                sh "trivy fs --format table -o fs.html ."
             }
         }
 
@@ -45,11 +51,6 @@ pipeline {
             }
         }
         
-        stage('Trivy FS Scan') {
-            steps {
-                sh "trivy fs --format table -o fs.html ."
-            }
-        }
         
         stage('Docker build') {
             steps {
