@@ -7,7 +7,7 @@ pipeline {
         booleanParam(name: 'SWITCH_TRAFFIC', defaultValue: false, description: 'Switch traffic between Blue and Green')
     }
     tools {
-        maven 'Maven3'
+        maven 'maven3'
     }
     
     environment {
@@ -67,7 +67,7 @@ pipeline {
         
          stage('Publish To Nexus') {
             steps {
-                withMaven(globalMavenSettingsConfig: 'Banjo-Nexus-Configuration', maven: 'Maven3', traceability: true) {
+                withMaven(globalMavenSettingsConfig: 'Banjo-Nexus-Configuration', maven: 'maven3', traceability: true) {
                         sh "mvn deploy -DskipTests=true"
                     }
             }
