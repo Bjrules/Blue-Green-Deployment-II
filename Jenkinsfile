@@ -6,7 +6,7 @@ pipeline {
         choice(name: 'DOCKER_TAG', choices: ['blue', 'green'], description: 'Choose the Docker image tag for the deployment')
         booleanParam(name: 'SWITCH_TRAFFIC', defaultValue: false, description: 'Switch traffic between Blue and Green')
     }
-    tool{
+    tools {
         maven 'maven3'
     }
     
