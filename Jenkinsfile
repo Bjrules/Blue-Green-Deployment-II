@@ -68,7 +68,7 @@ pipeline {
         
          stage('Publish To Nexus') {
             steps {
-               // withMaven(globalMavenSettingsConfig: 'BJ-settings', jdk: 'jdk17', maven: 'maven3', traceability: true) {
+                withMaven(globalMavenSettingsConfig: 'Banjo-Nexus-Config', jdk: 'jdk17' maven: 'maven3', traceability: true) {
                         sh "mvn deploy -DskipTests=true"
                 nexusArtifactUploader credentialsId: 'Nexus-server', groupId: 'nil', nexusUrl: '98.93.227.199:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: '0.0.1'
                    // }
