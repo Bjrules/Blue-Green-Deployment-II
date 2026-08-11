@@ -70,7 +70,7 @@ pipeline {
             steps {
                 
                 withMaven(globalMavenSettingsConfig: 'BJ-settings', maven: 'maven3', traceability: true) {
-                        sh "mvn clean deploy -DskipTests=true"
+                        sh "mvn deploy -DskipTests=true"
                 
                    }
             }
