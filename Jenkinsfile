@@ -68,9 +68,9 @@ pipeline {
         
          stage('Publish To Nexus') {
             steps {
-                //jdk: 'jdk17',
+                
                 withMaven(globalMavenSettingsConfig: 'Banjo-Nexus-Config', maven: 'maven3', traceability: true) {
-                        sh "mvn deploy -DskipTests=true"
+                        sh "mvn clean deploy -DskipTests=true"
                 
                    }
             }
